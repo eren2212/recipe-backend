@@ -1,0 +1,40 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+*.out
+*.pid
+*.gz
+
+# Coverage
+coverage/
+*.lcov
+
+# Build
+dist/
+build/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Optional
+# Eğer upload klasörü varsa ama git’e dahil etmek istemiyorsan:
+# uploads/
