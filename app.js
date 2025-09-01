@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var dotenv = require("dotenv");
 
-var favorities = require("./routes/favorities");
+var favorities = require("./routes/favorites");
 
 var app = express();
 dotenv.config();
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/favorities", favorities);
+app.use("/api/favorites", favorities);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
