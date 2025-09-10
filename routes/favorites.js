@@ -1,11 +1,13 @@
 var express = require("express");
 var router = express.Router();
 var supabase = require("../db/supabase");
+var checkAuth = require("../middleware/authMiddleware");
 
 /* GET home page. */
-router.get("/", async (req, res, next) => {
-  const { body } = req;
-  if (!body.user_id) {
+router.get("/", checkAuth, async (req, res, next) => {
+  const userId = req.user.id;
+
+  if (userId) {
     return res.status(400).json({ error: "id field required" });
   }
 
@@ -13,7 +15,7 @@ router.get("/", async (req, res, next) => {
     const response = await supabase
       .from("favorites")
       .select("*")
-      .eq("user_id", body.user_id);
+      .eq("user_id", userId);
 
     res.json(response.data);
   } catch (err) {
@@ -23,9 +25,9 @@ router.get("/", async (req, res, next) => {
 });
 
 /* POST FAVORİTE*/
-router.post("/add", async (req, res) => {
+router.post("/add", checkAuth, async (req, res) => {
+  const userId = req.user.id;
   const {
-    user_id,
     idMeal,
     strMeal,
     strCategory,
@@ -41,7 +43,7 @@ router.post("/add", async (req, res) => {
 
   try {
     const newFavorites = {
-      user_id,
+      user_id: userId,
       meal_id: idMeal,
       meal_name: strMeal,
       meal_thumb: strMealThumb,
@@ -68,9 +70,9 @@ router.post("/add", async (req, res) => {
 
 /*DELETE FAVORİTE*/
 // Örn: DELETE /favorites/123
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", checkAuth, async (req, res) => {
   const { id } = req.params;
-
+  const userId = req.user.id;
   if (!id) {
     return res.status(400).json({ error: "id is required" });
   }
@@ -79,7 +81,11 @@ router.delete("/:id", async (req, res) => {
     // Eğer auth kullanıyorsan, bu örnekte req.user.id'yi filtreye ekle
     // yoksa bu satırı çıkarabilirsin.
     // const userId = req.user?.id; // middleware ile set ediliyorsa
-    let query = await supabase.from("favorites").delete().eq("id", id);
+    let { data, error } = await supabase
+      .from("favorites")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", userId);
 
     // if (userId) {
     //   query = query.eq("user_id", userId);
