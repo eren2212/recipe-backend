@@ -22,7 +22,7 @@ router.get("/", checkAuth, async (req, res, next) => {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
-});
+}); 
 
 /* POST FAVORİTE*/
 router.post("/add", checkAuth, async (req, res) => {
